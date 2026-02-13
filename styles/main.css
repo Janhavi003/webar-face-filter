@@ -1,0 +1,99 @@
+/* Reset & base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: #0f0f0f;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* App container */
+#app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Screens */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+.screen.active {
+  display: flex;
+}
+
+/* Permission screen */
+#permission-screen {
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #111, #1a1a1a);
+}
+
+.permission-card {
+  max-width: 320px;
+  padding: 24px;
+  border-radius: 16px;
+  background: #181818;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+
+.permission-card h1 {
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+
+.permission-card p {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  opacity: 0.85;
+  margin-bottom: 20px;
+}
+
+.permission-card button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #4f7cff;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.permission-card button:active {
+  transform: scale(0.98);
+}
+
+/* Camera screen */
+#camera-screen {
+  background: #000;
+}
+
+/* Video */
+#camera-video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* UI overlay (future) */
+#ui-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
