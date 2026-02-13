@@ -14,5 +14,4 @@ A mobile-friendly, real-time face filter built with JavaScript, MediaPipe Face M
 - Three.js
 - Web Camera API
 
-## Status
-🚧 In active development
+
