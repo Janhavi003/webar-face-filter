@@ -78,6 +78,12 @@ body {
   transform: scale(0.98);
 }
 
+.permission-card button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
 /* Camera screen */
 #camera-screen {
   background: #000;

@@ -6,13 +6,15 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   />
+
   <title>WebAR Face Filter</title>
 
-  <link rel="stylesheet" href="../styles/main.css" />
+  <!-- Styles -->
+  <link rel="stylesheet" href="./styles/main.css" />
 </head>
 <body>
   <div id="app">
-    <!-- Camera Permission Screen -->
+    <!-- Permission Screen -->
     <div id="permission-screen" class="screen active">
       <div class="permission-card">
         <h1>Face Filter Demo</h1>
@@ -25,7 +27,7 @@
       </div>
     </div>
 
-    <!-- Camera / AR Screen -->
+    <!-- Camera Screen -->
     <div id="camera-screen" class="screen">
       <video
         id="camera-video"
@@ -34,11 +36,12 @@
         playsinline
       ></video>
 
-      <!-- UI overlay (filters, status, etc.) -->
+      <!-- UI Overlay (future AR controls) -->
       <div id="ui-overlay"></div>
     </div>
   </div>
 
-  <script type="module" src="../src/main.js"></script>
+  <!-- App Entry -->
+<script type="module" src="./src/main.js"></script>
 </body>
 </html>
