@@ -1,12 +1,15 @@
 import { startCamera } from "./core/camera.js";
 import { createFaceMesh } from "./tracking/faceMesh.js";
+import { setupLandmarkCanvas } from "./rendering/landmarksCanvas.js";
 
 const permissionScreen = document.getElementById("permission-screen");
 const cameraScreen = document.getElementById("camera-screen");
 const enableCameraBtn = document.getElementById("enable-camera-btn");
 const video = document.getElementById("camera-video");
+const canvas = document.getElementById("overlay-canvas");
 
 let faceMesh;
+let canvasRenderer;
 
 enableCameraBtn.addEventListener("click", async () => {
   enableCameraBtn.disabled = true;
@@ -18,6 +21,7 @@ enableCameraBtn.addEventListener("click", async () => {
     permissionScreen.classList.remove("active");
     cameraScreen.classList.add("active");
 
+    canvasRenderer = setupLandmarkCanvas(canvas, video);
     initFaceTracking();
   } catch (error) {
     console.error(error);
@@ -45,7 +49,5 @@ function onFaceResults(results) {
   if (!results.multiFaceLandmarks?.length) return;
 
   const landmarks = results.multiFaceLandmarks[0];
-
-  // TEMP: verify tracking works
-  console.log("Face landmarks:", landmarks.length);
+  canvasRenderer.drawLandmarks(landmarks);
 }
