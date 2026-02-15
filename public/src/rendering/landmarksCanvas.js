@@ -54,7 +54,6 @@ export function setupLandmarkCanvas(canvas, video) {
     ctx.moveTo(left.x + lensRadius, left.y);
     ctx.lineTo(right.x - lensRadius, right.y);
     ctx.stroke();
-    console.log("Drawing glasses");
 
   }
 
