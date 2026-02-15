@@ -56,7 +56,14 @@ function onFaceResults(results) {
   const landmarks = results.multiFaceLandmarks[0];
   const anchors = updateAnchors(landmarks);
 
-  canvasRenderer.drawLandmarks(landmarks);
+  canvasRenderer.clear();
 
-  canvasRenderer.drawAnchors?.(anchors);
+  // DEBUG OFF (important)
+  // canvasRenderer.drawLandmarks(landmarks);
+  // canvasRenderer.drawAnchors(anchors);
+
+  // ACTUAL FILTER
+  canvasRenderer.drawGlasses(anchors);
 }
+
+
