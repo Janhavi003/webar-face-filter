@@ -3,6 +3,9 @@ const LEFT_EYE = 33;
 const RIGHT_EYE = 263;
 const NOSE_TIP = 1;
 
+let smoothedRoll = 0;
+
+
 function lerp(a, b, t) {
   return a + (b - a) * t;
 }
@@ -18,11 +21,13 @@ function smoothPoint(prev, next, factor = 0.2) {
 
 export function createFaceAnchors() {
   let smoothed = {};
+  let smoothedRoll = 0;
 
   return function updateAnchors(landmarks) {
     const leftEye = landmarks[LEFT_EYE];
     const rightEye = landmarks[RIGHT_EYE];
     const nose = landmarks[NOSE_TIP];
+    const roll =Math.atan2(rightEye.y - leftEye.y, rightEye.x - leftEye.x);
 
     const center = {
       x: (leftEye.x + rightEye.x) / 2,
@@ -39,6 +44,7 @@ export function createFaceAnchors() {
     smoothed.rightEye = smoothPoint(smoothed.rightEye, rightEye);
     smoothed.center = smoothPoint(smoothed.center, center);
     smoothed.nose = smoothPoint(smoothed.nose, nose);
+    smoothedRoll = lerp(smoothedRoll, roll, 0.15);
 
     return {
       leftEye: smoothed.leftEye,
@@ -46,6 +52,7 @@ export function createFaceAnchors() {
       center: smoothed.center,
       nose: smoothed.nose,
       eyeDistance,
+      roll,
     };
   };
 }

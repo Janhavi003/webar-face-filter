@@ -1,5 +1,7 @@
 export function setupLandmarkCanvas(canvas, video) {
   const ctx = canvas.getContext("2d");
+  let opacity = 0;
+
 
   function resize() {
     canvas.width = video.videoWidth;
@@ -25,37 +27,54 @@ export function setupLandmarkCanvas(canvas, video) {
   }
 
   function drawGlasses(anchors) {
-    const left = toScreen(anchors.leftEye);
-    const right = toScreen(anchors.rightEye);
+  const left = toScreen(anchors.leftEye);
+  const right = toScreen(anchors.rightEye);
 
-    const eyeDistance = Math.hypot(
-      left.x - right.x,
-      left.y - right.y
-    );
+  const centerX = (left.x + right.x) / 2;
+  const centerY = (left.y + right.y) / 2;
 
-    const lensRadius = eyeDistance * 0.25;
-    const bridgeWidth = eyeDistance * 0.15;
+  const eyeDistance = Math.hypot(
+    left.x - right.x,
+    left.y - right.y
+  );
 
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = eyeDistance * 0.12;
+  const lensRadius = eyeDistance * 0.25;
+  opacity = Math.min(opacity + 0.05, 1);
+  ctx.globalAlpha = opacity;
 
-    // Left lens
-    ctx.beginPath();
-    ctx.arc(left.x, left.y, lensRadius, 0, Math.PI * 2);
-    ctx.stroke();
+  ctx.save();
 
-    // Right lens
-    ctx.beginPath();
-    ctx.arc(right.x, right.y, lensRadius, 0, Math.PI * 2);
-    ctx.stroke();
+  // Move to face center
+  ctx.translate(centerX, centerY);
 
-    // Bridge
-    ctx.beginPath();
-    ctx.moveTo(left.x + lensRadius, left.y);
-    ctx.lineTo(right.x - lensRadius, right.y);
-    ctx.stroke();
+  // Rotate with head tilt
+  ctx.rotate(anchors.roll);
 
-  }
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = eyeDistance * 0.12;
+  ctx.lineCap = "round";
+
+  // Left lens
+  ctx.beginPath();
+  ctx.arc(-eyeDistance / 2, 0, lensRadius, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Right lens
+  ctx.beginPath();
+  ctx.arc(eyeDistance / 2, 0, lensRadius, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Bridge
+  ctx.beginPath();
+  ctx.moveTo(-lensRadius, 0);
+  ctx.lineTo(lensRadius, 0);
+  ctx.stroke();
+
+  ctx.restore();
+  ctx.globalAlpha = 1;
+
+}
+
 
   return {
     clear() {

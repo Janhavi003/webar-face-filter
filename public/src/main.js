@@ -57,12 +57,6 @@ function onFaceResults(results) {
   const anchors = updateAnchors(landmarks);
 
   canvasRenderer.clear();
-
-  // DEBUG OFF (important)
-  // canvasRenderer.drawLandmarks(landmarks);
-  // canvasRenderer.drawAnchors(anchors);
-
-  // ACTUAL FILTER
   canvasRenderer.drawGlasses(anchors);
 }
 
