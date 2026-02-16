@@ -60,11 +60,11 @@ function initFaceTracking() {
 
 function onFaceResults(results) {
   canvasRenderer.clear();
+  canvasRenderer.drawCameraFrame();
 
-  if (!results.multiFaceLandmarks?.length) return;
-
-  const landmarks = results.multiFaceLandmarks[0];
-  canvasRenderer.drawEyeliner(landmarks);
+  // Face tracking still runs,
+  // but no visual overlay is drawn
 }
+
 
 
