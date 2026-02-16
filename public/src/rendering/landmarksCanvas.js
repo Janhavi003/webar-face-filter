@@ -1,8 +1,6 @@
 export function setupLandmarkCanvas(canvas, video) {
   const ctx = canvas.getContext("2d");
 
-  let opacity = 0;
-
   function resize() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -11,10 +9,10 @@ export function setupLandmarkCanvas(canvas, video) {
   resize();
   window.addEventListener("resize", resize);
 
-  function toScreen(point) {
+  function toScreen(p) {
     return {
-      x: point.x * canvas.width,
-      y: point.y * canvas.height,
+      x: p.x * canvas.width,
+      y: p.y * canvas.height,
     };
   }
 
@@ -22,60 +20,42 @@ export function setupLandmarkCanvas(canvas, video) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
-  function resetOpacity() {
-    opacity = 0;
+  // Accurate upper eyelid landmark indices
+  const LEFT_EYE_UPPER = [33, 246, 161, 160, 159, 158, 157, 173, 133];
+  const RIGHT_EYE_UPPER = [362, 398, 384, 385, 386, 387, 388, 466, 263];
+
+  function drawEyeliner(landmarks) {
+    ctx.strokeStyle = "rgba(15, 15, 15, 0.55)";
+    ctx.lineWidth = Math.max(canvas.width * 0.002, 1.3);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    drawSmoothEyePath(LEFT_EYE_UPPER, landmarks);
+    drawSmoothEyePath(RIGHT_EYE_UPPER, landmarks);
   }
 
-  function drawGlasses(anchors) {
-    const left = toScreen(anchors.leftEye);
-    const right = toScreen(anchors.rightEye);
+  function drawSmoothEyePath(indices, landmarks) {
+    const points = indices.map(i => toScreen(landmarks[i]));
 
-    const centerX = (left.x + right.x) / 2;
-    const centerY = (left.y + right.y) / 2;
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
 
-    const eyeDistance = Math.hypot(
-      left.x - right.x,
-      left.y - right.y
+    for (let i = 1; i < points.length - 1; i++) {
+      const xc = (points[i].x + points[i + 1].x) / 2;
+      const yc = (points[i].y + points[i + 1].y) / 2;
+      ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+    }
+
+    ctx.lineTo(
+      points[points.length - 1].x,
+      points[points.length - 1].y
     );
 
-    const lensRadius = eyeDistance * 0.25;
-
-    // Smooth fade-in
-    opacity = Math.min(opacity + 0.05, 1);
-
-    ctx.save();
-
-    ctx.globalAlpha = opacity;
-    ctx.translate(centerX, centerY);
-    ctx.rotate(anchors.roll);
-
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = eyeDistance * 0.12;
-    ctx.lineCap = "round";
-
-    // Left lens
-    ctx.beginPath();
-    ctx.arc(-eyeDistance / 2, 0, lensRadius, 0, Math.PI * 2);
     ctx.stroke();
-
-    // Right lens
-    ctx.beginPath();
-    ctx.arc(eyeDistance / 2, 0, lensRadius, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // Bridge
-    ctx.beginPath();
-    ctx.moveTo(-lensRadius * 0.6, 0);
-    ctx.lineTo(lensRadius * 0.6, 0);
-    ctx.stroke();
-
-    ctx.restore();
-    ctx.globalAlpha = 1;
   }
 
   return {
     clear,
-    resetOpacity,
-    drawGlasses,
+    drawEyeliner,
   };
 }

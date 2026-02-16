@@ -61,13 +61,10 @@ function initFaceTracking() {
 function onFaceResults(results) {
   canvasRenderer.clear();
 
-  if (!results.multiFaceLandmarks?.length) {
-    canvasRenderer.resetOpacity();
-    return;
-  }
+  if (!results.multiFaceLandmarks?.length) return;
 
   const landmarks = results.multiFaceLandmarks[0];
-  const anchors = updateAnchors(landmarks);
-
-  canvasRenderer.drawGlasses(anchors);
+  canvasRenderer.drawEyeliner(landmarks);
 }
+
+
