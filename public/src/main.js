@@ -1,8 +1,7 @@
 import { startCamera } from "./core/camera.js";
 import { createFaceMesh } from "./tracking/faceMesh.js";
-import { setupLandmarkCanvas } from "./rendering/landmarksCanvas.js";
 import { createFaceAnchors } from "./tracking/faceAnchors.js";
-
+import { setupLandmarkCanvas } from "./rendering/landmarksCanvas.js";
 
 const permissionScreen = document.getElementById("permission-screen");
 const cameraScreen = document.getElementById("camera-screen");
@@ -11,9 +10,13 @@ const video = document.getElementById("camera-video");
 const canvas = document.getElementById("overlay-canvas");
 
 let faceMesh;
-let canvasRenderer;
 let updateAnchors;
+let canvasRenderer;
 
+// Performance tuning
+let lastFrameTime = 0;
+const TARGET_FPS = 30;
+const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 enableCameraBtn.addEventListener("click", async () => {
   enableCameraBtn.disabled = true;
@@ -27,6 +30,7 @@ enableCameraBtn.addEventListener("click", async () => {
 
     canvasRenderer = setupLandmarkCanvas(canvas, video);
     updateAnchors = createFaceAnchors();
+
     initFaceTracking();
   } catch (error) {
     console.error(error);
@@ -41,6 +45,10 @@ function initFaceTracking() {
 
   const camera = new Camera(video, {
     onFrame: async () => {
+      const now = performance.now();
+      if (now - lastFrameTime < FRAME_INTERVAL) return;
+
+      lastFrameTime = now;
       await faceMesh.send({ image: video });
     },
     width: video.videoWidth,
@@ -51,13 +59,15 @@ function initFaceTracking() {
 }
 
 function onFaceResults(results) {
-  if (!results.multiFaceLandmarks?.length) return;
+  canvasRenderer.clear();
+
+  if (!results.multiFaceLandmarks?.length) {
+    canvasRenderer.resetOpacity();
+    return;
+  }
 
   const landmarks = results.multiFaceLandmarks[0];
   const anchors = updateAnchors(landmarks);
 
-  canvasRenderer.clear();
   canvasRenderer.drawGlasses(anchors);
 }
-
-
