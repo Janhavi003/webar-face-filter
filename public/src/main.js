@@ -1,70 +1,55 @@
 import { startCamera } from "./core/camera.js";
-import { createFaceMesh } from "./tracking/faceMesh.js";
-import { createFaceAnchors } from "./tracking/faceAnchors.js";
 import { setupLandmarkCanvas } from "./rendering/landmarksCanvas.js";
 
-const permissionScreen = document.getElementById("permission-screen");
-const cameraScreen = document.getElementById("camera-screen");
-const enableCameraBtn = document.getElementById("enable-camera-btn");
-const video = document.getElementById("camera-video");
-const canvas = document.getElementById("overlay-canvas");
+// -----------------------------
+// DOM elements
+// -----------------------------
+const video = document.getElementById("video");
+const canvas = document.getElementById("output");
 
-let faceMesh;
-let updateAnchors;
-let canvasRenderer;
+// -----------------------------
+// App state
+// -----------------------------
+let activeFilter = "none";
+let canvasRenderer = null;
 
-// Performance tuning
-let lastFrameTime = 0;
-const TARGET_FPS = 30;
-const FRAME_INTERVAL = 1000 / TARGET_FPS;
-
-enableCameraBtn.addEventListener("click", async () => {
-  enableCameraBtn.disabled = true;
-  enableCameraBtn.textContent = "Starting camera...";
-
+// -----------------------------
+// Initialization
+// -----------------------------
+async function init() {
   try {
     await startCamera(video);
 
-    permissionScreen.classList.remove("active");
-    cameraScreen.classList.add("active");
-
     canvasRenderer = setupLandmarkCanvas(canvas, video);
-    updateAnchors = createFaceAnchors();
 
-    initFaceTracking();
-  } catch (error) {
-    console.error(error);
+    requestAnimationFrame(renderLoop);
+  } catch (err) {
+    console.error("Failed to initialize camera:", err);
     alert("Unable to access the camera.");
-    enableCameraBtn.disabled = false;
-    enableCameraBtn.textContent = "Enable Camera";
   }
-});
-
-function initFaceTracking() {
-  faceMesh = createFaceMesh(onFaceResults);
-
-  const camera = new Camera(video, {
-    onFrame: async () => {
-      const now = performance.now();
-      if (now - lastFrameTime < FRAME_INTERVAL) return;
-
-      lastFrameTime = now;
-      await faceMesh.send({ image: video });
-    },
-    width: video.videoWidth,
-    height: video.videoHeight,
-  });
-
-  camera.start();
 }
 
-function onFaceResults(results) {
+// -----------------------------
+// Render loop
+// -----------------------------
+function renderLoop() {
+  if (!canvasRenderer) return;
+
   canvasRenderer.clear();
-  canvasRenderer.drawCameraFrame();
+  canvasRenderer.drawCameraFrame(activeFilter);
 
-  // Face tracking still runs,
-  // but no visual overlay is drawn
+  requestAnimationFrame(renderLoop);
 }
 
+// -----------------------------
+// Public API (for console / UI)
+// -----------------------------
+window.setActiveFilter = (filterName) => {
+  activeFilter = filterName;
+  console.log("Active filter set to:", filterName);
+};
 
-
+// -----------------------------
+// Start app
+// -----------------------------
+init();
