@@ -2,52 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebAR Camera Filters</title>
 
-  <title>WebAR Face Filter</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="./styles/main.css" />
+    #app {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    video {
+      display: none;
+    }
+
+    canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Minimal filter UI (optional but safe) */
+    .filter-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .filter-controls select {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      font-size: 14px;
+      outline: none;
+    }
+  </style>
 </head>
+
 <body>
   <div id="app">
-    <!-- Permission Screen -->
-    <div id="permission-screen" class="screen active">
-      <div class="permission-card">
-        <h1>Face Filter Demo</h1>
-        <p>
-          This experience uses your camera to apply a real-time AR face filter.
-        </p>
-        <button id="enable-camera-btn">
-          Enable Camera
-        </button>
-      </div>
-    </div>
+    <!-- Camera video (hidden, used as source) -->
+    <video id="video" playsinline muted></video>
 
-   <!-- Camera Screen -->
-  <div id="camera-screen" class="screen">
-    <video
-      id="camera-video"
-      autoplay
-      muted
-      playsinline
-    ></video>
+    <!-- Render output -->
+    <canvas id="output"></canvas>
 
-  <canvas id="overlay-canvas"></canvas>
-
-      <!-- UI Overlay (future AR controls) -->
-      <div id="ui-overlay"></div>
+    <!-- Optional filter selector -->
+    <div class="filter-controls">
+      <select onchange="setActiveFilter(this.value)">
+        <option value="none">Neutral</option>
+        <option value="warm">Warm</option>
+        <option value="cool">Cool</option>
+        <option value="contrast">Contrast</option>
+        <option value="soft-blur">Soft Blur</option>
+      </select>
     </div>
   </div>
 
-  <!-- MediaPipe Face Mesh -->
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-
-  <!-- App Entry -->
+  <!-- Main app script -->
   <script type="module" src="./src/main.js"></script>
 </body>
 </html>
