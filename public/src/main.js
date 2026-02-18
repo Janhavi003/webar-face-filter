@@ -1,41 +1,45 @@
 import { startCamera } from "./core/camera.js";
 import { setupLandmarkCanvas } from "./rendering/landmarksCanvas.js";
 
-// -----------------------------
-// DOM elements
-// -----------------------------
-const video = document.getElementById("video");
-const canvas = document.getElementById("output");
-const filterSelect = document.getElementById("filterSelect");
-
-// -----------------------------
-// App state
-// -----------------------------
 let activeFilter = "none";
 let canvasRenderer = null;
 
-// -----------------------------
-// Initialization
-// -----------------------------
-async function init() {
-  try {
-    // Start camera
-    await startCamera(video);
+document.addEventListener("DOMContentLoaded", () => {
+  const video = document.getElementById("video");
+  const canvas = document.getElementById("output");
 
-    // Setup renderer
-    canvasRenderer = setupLandmarkCanvas(canvas, video);
+  const enableCameraBtn = document.getElementById("enableCameraBtn");
+  const permissionScreen = document.getElementById("permission-screen");
 
-    // Start render loop
-    requestAnimationFrame(renderLoop);
-  } catch (err) {
-    console.error("Failed to initialize camera:", err);
-    alert("Unable to access the camera.");
-  }
-}
+  const filterSelect = document.getElementById("filterSelect");
+  const filterControls = document.getElementById("filterControls");
 
-// -----------------------------
-// Render loop
-// -----------------------------
+  filterSelect.addEventListener("change", (e) => {
+    activeFilter = e.target.value;
+  });
+
+  enableCameraBtn.addEventListener("click", async () => {
+    enableCameraBtn.disabled = true;
+    enableCameraBtn.textContent = "Starting camera...";
+
+    try {
+      await startCamera(video);
+
+      canvasRenderer = setupLandmarkCanvas(canvas, video);
+
+      permissionScreen.style.display = "none";
+      filterControls.classList.add("active");
+
+      requestAnimationFrame(renderLoop);
+    } catch (err) {
+      console.error(err);
+      alert("Unable to access the camera.");
+      enableCameraBtn.disabled = false;
+      enableCameraBtn.textContent = "Enable Camera";
+    }
+  });
+});
+
 function renderLoop() {
   if (!canvasRenderer) return;
 
@@ -44,16 +48,3 @@ function renderLoop() {
 
   requestAnimationFrame(renderLoop);
 }
-
-// -----------------------------
-// Filter UI handling
-// -----------------------------
-filterSelect.addEventListener("change", (e) => {
-  activeFilter = e.target.value;
-  console.log("Active filter:", activeFilter);
-});
-
-// -----------------------------
-// Start app
-// -----------------------------
-init();
