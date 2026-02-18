@@ -20,7 +20,7 @@ body {
   height: 100%;
 }
 
-/* Video is source only */
+/* Hide video (used only as source) */
 video {
   display: none;
 }
@@ -34,7 +34,7 @@ canvas {
   object-fit: cover;
 }
 
-/* Permission screen */
+/* ---------------- Permission Screen ---------------- */
 #permission-screen {
   position: absolute;
   inset: 0;
@@ -45,24 +45,56 @@ canvas {
   background: #000;
 }
 
+.permission-card {
+  background: rgba(18, 18, 18, 0.92);
+  padding: 36px 40px;
+  border-radius: 18px;
+  text-align: center;
+  max-width: 340px;
+  width: calc(100% - 40px);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+.permission-card h1 {
+  margin: 0 0 10px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.permission-card p {
+  margin: 0 0 28px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
 #enableCameraBtn {
+  width: 100%;
+  height: 48px;
+  border-radius: 12px;
   border: none;
-  border-radius: 10px;
-  padding: 14px 22px;
-  font-size: 16px;
-  cursor: pointer;
-  background: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ffffff, #eaeaea);
   color: #000;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#enableCameraBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 #enableCameraBtn:disabled {
   opacity: 0.6;
+  cursor: default;
 }
 
-/* Filter controls */
+/* ---------------- Filter Controls ---------------- */
 .filter-controls {
   position: absolute;
-  bottom: 20px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -73,12 +105,33 @@ canvas {
   display: block;
 }
 
-.filter-controls select {
-  padding: 10px 14px;
-  border-radius: 8px;
+.filter-panel {
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 12px 14px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+.filter-panel label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.filter-panel select {
+  appearance: none;
   border: none;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(255, 255, 255, 0.08);
   color: #fff;
+  padding: 8px 34px 8px 12px;
+  border-radius: 10px;
   font-size: 14px;
+  cursor: pointer;
   outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='white' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
 }

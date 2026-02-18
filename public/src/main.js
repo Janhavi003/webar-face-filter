@@ -2,30 +2,29 @@ import { startCamera } from "./core/camera.js";
 import { setupLandmarkCanvas } from "./rendering/landmarksCanvas.js";
 
 let activeFilter = "none";
-let canvasRenderer = null;
+let renderer = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   const video = document.getElementById("video");
   const canvas = document.getElementById("output");
 
-  const enableCameraBtn = document.getElementById("enableCameraBtn");
+  const enableBtn = document.getElementById("enableCameraBtn");
   const permissionScreen = document.getElementById("permission-screen");
 
-  const filterSelect = document.getElementById("filterSelect");
   const filterControls = document.getElementById("filterControls");
+  const filterSelect = document.getElementById("filterSelect");
 
   filterSelect.addEventListener("change", (e) => {
     activeFilter = e.target.value;
   });
 
-  enableCameraBtn.addEventListener("click", async () => {
-    enableCameraBtn.disabled = true;
-    enableCameraBtn.textContent = "Starting camera...";
+  enableBtn.addEventListener("click", async () => {
+    enableBtn.disabled = true;
+    enableBtn.textContent = "Starting camera...";
 
     try {
       await startCamera(video);
-
-      canvasRenderer = setupLandmarkCanvas(canvas, video);
+      renderer = setupLandmarkCanvas(canvas, video);
 
       permissionScreen.style.display = "none";
       filterControls.classList.add("active");
@@ -33,18 +32,18 @@ document.addEventListener("DOMContentLoaded", () => {
       requestAnimationFrame(renderLoop);
     } catch (err) {
       console.error(err);
-      alert("Unable to access the camera.");
-      enableCameraBtn.disabled = false;
-      enableCameraBtn.textContent = "Enable Camera";
+      alert("Unable to access camera");
+      enableBtn.disabled = false;
+      enableBtn.textContent = "Enable Camera";
     }
   });
 });
 
 function renderLoop() {
-  if (!canvasRenderer) return;
+  if (!renderer) return;
 
-  canvasRenderer.clear();
-  canvasRenderer.drawCameraFrame(activeFilter);
+  renderer.clear();
+  renderer.drawCameraFrame(activeFilter);
 
   requestAnimationFrame(renderLoop);
 }

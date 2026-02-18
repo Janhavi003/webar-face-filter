@@ -1,16 +1,12 @@
 export async function startCamera(videoElement) {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+  if (!navigator.mediaDevices?.getUserMedia) {
     throw new Error("Camera API not supported");
   }
 
-  const constraints = {
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: { facingMode: "user" },
     audio: false,
-    video: {
-      facingMode: "user"
-    }
-  };
-
-  const stream = await navigator.mediaDevices.getUserMedia(constraints);
+  });
 
   videoElement.srcObject = stream;
   videoElement.playsInline = true;

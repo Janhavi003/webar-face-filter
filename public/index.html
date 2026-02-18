@@ -11,22 +11,29 @@
   <div id="app">
     <!-- Permission Screen -->
     <div id="permission-screen">
-      <button id="enableCameraBtn">Enable Camera</button>
+      <div class="permission-card">
+        <h1>Camera Filters</h1>
+        <p>Preview subtle real-time visual filters using your camera.</p>
+        <button id="enableCameraBtn">Enable Camera</button>
+      </div>
     </div>
 
-    <!-- Camera elements -->
+    <!-- Camera Elements -->
     <video id="video" playsinline muted></video>
     <canvas id="output"></canvas>
 
-    <!-- Filter UI -->
+    <!-- Filter Controls -->
     <div class="filter-controls" id="filterControls">
-      <select id="filterSelect">
-        <option value="none">Neutral</option>
-        <option value="warm">Warm</option>
-        <option value="cool">Cool</option>
-        <option value="contrast">Contrast</option>
-        <option value="soft-blur">Soft Blur</option>
-      </select>
+      <div class="filter-panel">
+        <label for="filterSelect">Filter</label>
+        <select id="filterSelect">
+          <option value="none">Neutral</option>
+          <option value="warm">Warm</option>
+          <option value="cool">Cool</option>
+          <option value="contrast">Contrast</option>
+          <option value="soft-blur">Soft Blur</option>
+        </select>
+      </div>
     </div>
   </div>
 
