@@ -24,17 +24,22 @@
 
     <!-- Filter Controls -->
     <div class="filter-controls" id="filterControls">
-      <div class="filter-panel">
-        <label for="filterSelect">Filter</label>
-        <select id="filterSelect">
-          <option value="none">Neutral</option>
-          <option value="warm">Warm</option>
-          <option value="cool">Cool</option>
-          <option value="contrast">Contrast</option>
-          <option value="soft-blur">Soft Blur</option>
-        </select>
-      </div>
-    </div>
+  <div class="filter-pill" id="filterToggle">
+    <span class="filter-label">Filter</span>
+    <span class="filter-value" id="activeFilterLabel">Neutral</span>
+  </div>
+
+  <div class="filter-menu" id="filterMenu">
+    <button data-filter="none">Neutral</button>
+    <button data-filter="warm">Warm</button>
+    <button data-filter="cool">Cool</button>
+    <button data-filter="contrast">Contrast</button>
+    <button data-filter="soft-blur">Soft Blur</button>
+  </div>
+</div>
+
+
+
   </div>
 
   <script type="module" src="./src/main.js"></script>
