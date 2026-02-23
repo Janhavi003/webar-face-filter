@@ -27,6 +27,15 @@ export function setupLandmarkCanvas(canvas, video) {
       case "soft-blur":
         ctx.filter = "blur(6px)";
         break;
+      case "bw":
+        ctx.filter = "grayscale(1) contrast(1.1)";
+        break;
+      case "matte":
+        ctx.filter = "brightness(1.05) contrast(0.9) saturate(1.05)";
+        break;
+      case "vivid":
+        ctx.filter = "brightness(1.1) contrast(1.2) saturate(1.4)";
+        break;
       default:
         ctx.filter = "none";
     }

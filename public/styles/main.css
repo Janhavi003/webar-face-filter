@@ -20,12 +20,10 @@ body {
   height: 100%;
 }
 
-/* Hide video (used only as source) */
 video {
   display: none;
 }
 
-/* Canvas output */
 canvas {
   position: absolute;
   inset: 0;
@@ -34,7 +32,7 @@ canvas {
   object-fit: cover;
 }
 
-/* ---------------- Permission Screen ---------------- */
+/* ---------- Permission Screen ---------- */
 #permission-screen {
   position: absolute;
   inset: 0;
@@ -78,29 +76,27 @@ canvas {
   background: linear-gradient(135deg, #ffffff, #eaeaea);
   color: #000;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-#enableCameraBtn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 #enableCameraBtn:disabled {
   opacity: 0.6;
-  cursor: default;
 }
 
-/* ---------------- Filter Controls (Improved) ---------------- */
+/* ---------- Filter Controls ---------- */
 .filter-controls {
   position: absolute;
   bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 20;
+  z-index: 15;
+  display: none;
 }
 
-/* Toggle pill */
+.filter-controls.active {
+  display: block;
+}
+
+/* Pill */
 .filter-pill {
   display: flex;
   align-items: center;
@@ -123,7 +119,7 @@ canvas {
   font-weight: 500;
 }
 
-/* Dropdown menu */
+/* Menu */
 .filter-menu {
   position: absolute;
   bottom: 56px;
